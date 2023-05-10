@@ -43,7 +43,7 @@ install.packages("optparse")
 `H5MANIPULATOR`, Because it is a private repository, you may need to provided a [Github Personal Access Token](https://github.com/settings/tokens) for installation:
 ```
 Sys.setenv(GITHUB_PAT = "[your_PAT_here]")
-devtools::install_github("acicalo2/H5MANIPULATOR")
+devtools::install_github("bwh-bioinformatics-hub/H5MANIPULATOR")
 ```
 
 [Return to Contents](#contents)
@@ -55,7 +55,7 @@ devtools::install_github("acicalo2/H5MANIPULATOR")
 
 ```
 Sys.setenv(GITHUB_PAT = "[your_PAT_here]")
-devtools::install_github("acicalo2/qcreporter")
+devtools::install_github("bwh-bioinformatics-hub/qcreporter")
 ```  
 To run scripts, clone the GitHub repository and run the desired wrapper script within the local clone.
 
