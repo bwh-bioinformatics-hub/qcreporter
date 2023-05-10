@@ -691,19 +691,39 @@ topN <- Extract_Top_Markers(scrna.markers, num_genes = 25, named_vector = FALSE,
 
 <a  id="mgt"></a> 
 ```{r Marker_Gene_Table}
+scrna.markers_sig <- scrna.markers[scrna.markers$p_val_adj <= 0.05,]            
 # Create Interactive Table
 if (species == "Mus musculus"){
-tibble::as_tibble(unique(scrna.markers)) %>% dplyr::arrange(p_val_adj) -> scrna.markers
-scrna.markers = scrna.markers %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
+tibble::as_tibble(unique(scrna.markers_sig)) %>% dplyr::arrange(p_val_adj) -> scrna.markers_sig
+scrna.markers_sig = scrna.markers_sig %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
                                              p_val_adj,pct.1,pct.2,geneID)
-final_df <- data.frame(           "cluster"     = scrna.markers$cluster,
-                                  "gene"       = scrna.markers$geneSymbol,
-                                  "p_val"      = scrna.markers$p_val,
-                                  "avg_log2FC" = scrna.markers$avg_log2FC,
-                                  "p_val_adj"  = scrna.markers$p_val_adj,
-                                  "pct.1"      = scrna.markers$pct.1,
-                                  "pct.2"      = scrna.markers$pct.2,
-                                  "MGI_ID" = paste0("<a  href='https://www.informatics.jax.org/quicksearch/summary?queryType=exactPhrase&query=",scrna.markers$geneID,"'>", scrna.markers$geneID,"</a>"))
+final_df <- data.frame(           "cluster"    = scrna.markers_sig$cluster,
+                                  "gene"       = scrna.markers_sig$geneSymbol,
+                                  "p_val"      = scrna.markers_sig$p_val,
+                                  "avg_log2FC" = scrna.markers_sig$avg_log2FC,
+                                  "p_val_adj"  = scrna.markers_sig$p_val_adj,
+                                  "pct.1"      = scrna.markers_sig$pct.1,
+                                  "pct.2"      = scrna.markers_sig$pct.2,
+                                  "MGI_ID" = paste0("<a  href='https://www.informatics.jax.org/quicksearch/summary?queryType=exactPhrase&query=",scrna.markers_sig$geneID,"'>", scrna.markers_sig$geneID,"</a>"))
+
+DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
+              editable = TRUE, extensions = 'Buttons', options = list(
+                dom = 'Bfrtip',
+                buttons = c('copy','csv','excel','pdf','print')
+              ),escape = FALSE)
+}
+if (species == "Drosophila Melanogaster"){
+as_tibble(unique(scrna.markers_sig)) %>% arrange(p_val_adj) -> scrna.markers_sig
+scrna.markers_sig = scrna.markers_sig %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
+                                             p_val_adj,pct.1,pct.2,geneID)
+final_df <- data.frame(           "cluster"    = scrna.markers_sig$cluster,
+                                  "gene"       = scrna.markers_sig$geneSymbol,
+                                  "p_val"      = scrna.markers_sig$p_val,
+                                  "avg_log2FC" = scrna.markers_sig$avg_log2FC,
+                                  "p_val_adj"  = scrna.markers_sig$p_val_adj,
+                                  "pct.1"      = scrna.markers_sig$pct.1,
+                                  "pct.2"      = scrna.markers_sig$pct.2,
+                                  "FlyBase_ID" = paste0("<a  href='https://flybase.org/reports/",scrna.markers_sig$geneID,"'>", scrna.markers_sig$geneID,"</a>"))
 
 DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
               editable = TRUE, extensions = 'Buttons', options = list(
@@ -712,18 +732,19 @@ DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
               ),escape = FALSE)
 }
             
-if (species == "Drosophila Melanogaster"){
-as_tibble(unique(scrna.markers)) %>% arrange(p_val_adj) -> scrna.markers
-scrna.markers = scrna.markers %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
+if (species == "Homo Sapiens"){
+# Create Interactive Table
+tibble::as_tibble(unique(scrna.markers_sig)) %>% dplyr::arrange(p_val_adj) -> scrna.markers_sig
+scrna.markers_sig = scrna.markers_sig %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
                                              p_val_adj,pct.1,pct.2,geneID)
-final_df <- data.frame(           "cluster"     = scrna.markers$cluster,
-                                  "gene"       = scrna.markers$geneSymbol,
-                                  "p_val"      = scrna.markers$p_val,
-                                  "avg_log2FC" = scrna.markers$avg_log2FC,
-                                  "p_val_adj"  = scrna.markers$p_val_adj,
-                                  "pct.1"      = scrna.markers$pct.1,
-                                  "pct.2"      = scrna.markers$pct.2,
-                                  "FlyBase_ID" = paste0("<a  href='https://flybase.org/reports/",scrna.markers$geneID,"'>", scrna.markers$geneID,"</a>"))
+final_df <- data.frame(           "cluster"    = scrna.markers_sig$cluster,
+                                  "gene"       = scrna.markers_sig$geneSymbol,
+                                  "p_val"      = scrna.markers_sig$p_val,
+                                  "avg_log2FC" = scrna.markers_sig$avg_log2FC,
+                                  "p_val_adj"  = scrna.markers_sig$p_val_adj,
+                                  "pct.1"      = scrna.markers_sig$pct.1,
+                                  "pct.2"      = scrna.markers_sig$pct.2,
+                                  "GeneCards" = paste0("<a  href='https://www.genecards.org/Search/Keyword?queryString=",scrna.markers_sig$geneID,"'>", scrna.markers_sig$geneID,"</a>"))
 
 DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
               editable = TRUE, extensions = 'Buttons', options = list(
