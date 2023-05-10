@@ -692,21 +692,46 @@ topN <- Extract_Top_Markers(scrna.markers, num_genes = 25, named_vector = FALSE,
 <a  id="mgt"></a> 
 ```{r Marker_Gene_Table}
 # Create Interactive Table
-as_tibble(unique(scrna.markers)) %>% arrange(p_val_adj) -> scrna.markers
+if (species == "Mus musculus"){
+tibble::as_tibble(unique(scrna.markers)) %>% dplyr::arrange(p_val_adj) -> scrna.markers
 scrna.markers = scrna.markers %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
-                                             p_val_adj,pct.1,pct.2)
+                                             p_val_adj,pct.1,pct.2,geneID)
 final_df <- data.frame(           "cluster"     = scrna.markers$cluster,
                                   "gene"       = scrna.markers$geneSymbol,
                                   "p_val"      = scrna.markers$p_val,
                                   "avg_log2FC" = scrna.markers$avg_log2FC,
                                   "p_val_adj"  = scrna.markers$p_val_adj,
                                   "pct.1"      = scrna.markers$pct.1,
-                                  "pct.2"      = scrna.markers$pct.2)            
+                                  "pct.2"      = scrna.markers$pct.2,
+                                  "MGI_ID" = paste0("<a  href='https://www.informatics.jax.org/quicksearch/summary?queryType=exactPhrase&query=",scrna.markers$geneID,"'>", scrna.markers$geneID,"</a>"))
+
 DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
               editable = TRUE, extensions = 'Buttons', options = list(
                 dom = 'Bfrtip',
                 buttons = c('copy','csv','excel','pdf','print')
-              ),escape = FALSE)          
+              ),escape = FALSE)
+}
+            
+if (species == "Drosophila Melanogaster"){
+as_tibble(unique(scrna.markers)) %>% arrange(p_val_adj) -> scrna.markers
+scrna.markers = scrna.markers %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
+                                             p_val_adj,pct.1,pct.2,geneID)
+final_df <- data.frame(           "cluster"     = scrna.markers$cluster,
+                                  "gene"       = scrna.markers$geneSymbol,
+                                  "p_val"      = scrna.markers$p_val,
+                                  "avg_log2FC" = scrna.markers$avg_log2FC,
+                                  "p_val_adj"  = scrna.markers$p_val_adj,
+                                  "pct.1"      = scrna.markers$pct.1,
+                                  "pct.2"      = scrna.markers$pct.2,
+                                  "FlyBase_ID" = paste0("<a  href='https://flybase.org/reports/",scrna.markers$geneID,"'>", scrna.markers$geneID,"</a>"))
+
+DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
+              editable = TRUE, extensions = 'Buttons', options = list(
+                dom = 'Bfrtip',
+                buttons = c('copy','csv','excel','pdf','print')
+              ),escape = FALSE)
+}
+            
 ```
 <a  id="fp"></a> 
 ```{r Feature_Plot}
