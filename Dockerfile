@@ -1,4 +1,4 @@
-FROM us.gcr.io/dev-pipeline-internal/google-r-base:v2.0
+FROM ubuntu
 
 ## Install apt dependencies
 RUN apt-get update \
@@ -41,11 +41,10 @@ RUN R -e 'BiocManager::install(c("rhdf5","GenomicRanges"))'
 ## Install Required GITHUB packages
 COPY auth_token /tmp/auth_token
 RUN export GITHUB_PAT=$(cat /tmp/auth_token) \
-   && R -e    'auth_token = Sys.getenv("GITHUB_PAT")); devtools::install_github("acicalo2/H5MANIPULATOR", auth_token =   Sys.getenv("GITHUB_PAT")); devtools::install_github("acicalo2/qcreporter", auth_token = Sys.getenv("GITHUB_PAT"))' \
-  && git clone  https://aifi-gitops:$GITHUB_PAT@github.com/acicalo2/qcreporter.git \
+   && R -e    'auth_token = Sys.getenv("GITHUB_PAT")); devtools::install_github("bwh-bioinformatics-hub/H5MANIPULATOR", auth_token =   Sys.getenv("GITHUB_PAT")); devtools::install_github("acicalo2/qcreporter", auth_token = Sys.getenv("GITHUB_PAT"))' \
+  && git clone  https://aifi-gitops:$GITHUB_PAT@github.com/bwh-bioinformatics-hub/qcreporter.git \
   && rm -rf /tmp/downloaded_packages /tmp/*.rds /tmp/auth_token 
 
 ## Pipeline package requirements
 RUN R -e 'install.packages(c("rmarkdown","optparse"))'
-
 
