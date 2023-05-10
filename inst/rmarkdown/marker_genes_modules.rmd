@@ -500,7 +500,7 @@ scale_y_log10() +
 theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
-facet_wrap(~orig.ident) + 
+facet_wrap(~sample_id) + 
 ggtitle("Prefilter")
 
 postfilter_qc_mito <- metadata_postfilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.mito)) + 
@@ -512,7 +512,7 @@ scale_y_log10() +
 theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
-facet_wrap(~orig.ident) + 
+facet_wrap(~sample_id) + 
 ggtitle("Postfilter")
 
 ggarrange(prefilter_qc_mito,postfilter_qc_mito,ncol=1,nrow=2,widths = 25,heights = 30)
@@ -531,7 +531,7 @@ scale_y_log10() +
 theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
-facet_wrap(~orig.ident) +
+facet_wrap(~sample_id) +
 ggtitle("Prefilter")
 
 postfilter_qc_ribo <- metadata_postfilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.ribo)) + 
@@ -543,7 +543,7 @@ scale_y_log10() +
 theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
-facet_wrap(~orig.ident) +
+facet_wrap(~sample_id) +
 ggtitle("Postfilter")
 
 ggarrange(prefilter_qc_ribo,postfilter_qc_ribo,ncol=1,nrow=2,widths = 10,heights = 8)
@@ -552,7 +552,7 @@ ggarrange(prefilter_qc_ribo,postfilter_qc_ribo,ncol=1,nrow=2,widths = 10,heights
 ### UMIs/transcripts per cell
 ```{r Visualize the number UMIs/transcripts per cell}
 UMIs_transcripts_per_cell_prefilter <- metadata_prefilter %>% 
-  	ggplot(aes(color=orig.ident, x=nCount_RNA, fill= orig.ident)) + 
+  	ggplot(aes(color=sample_id, x=nCount_RNA, fill= sample_id)) + 
   	geom_density(alpha = 0.2) + 
   	scale_x_log10() + 
   	theme_classic() +
@@ -561,7 +561,7 @@ UMIs_transcripts_per_cell_prefilter <- metadata_prefilter %>%
     ggtitle("Prefilter")
 
 UMIs_transcripts_per_cell_postfilter <- metadata_postfilter %>% 
-  	ggplot(aes(color=orig.ident, x=nCount_RNA, fill= orig.ident)) + 
+  	ggplot(aes(color=sample_id, x=nCount_RNA, fill= sample_id)) + 
   	geom_density(alpha = 0.2) + 
   	scale_x_log10() + 
   	theme_classic() +
@@ -575,7 +575,7 @@ ggarrange(UMIs_transcripts_per_cell_prefilter,UMIs_transcripts_per_cell_postfilt
 ### genes per cell 
 ```{r Genes Per Cell}
 genes_per_cell_pre <- metadata_prefilter %>% 
-  	ggplot(aes(color=orig.ident, x=nCount_RNA, fill=orig.ident )) + 
+  	ggplot(aes(color=sample_id, x=nCount_RNA, fill=sample_id )) + 
   	geom_density(alpha = 0.2) + 
   	theme_classic() +
   	scale_x_log10() + 
@@ -583,7 +583,7 @@ genes_per_cell_pre <- metadata_prefilter %>%
     ggtitle("Prefilter")
 
 genes_per_cell_post <- metadata_postfilter %>% 
-  	ggplot(aes(color=orig.ident, x=nCount_RNA, fill=orig.ident )) + 
+  	ggplot(aes(color=sample_id, x=nCount_RNA, fill=sample_id )) + 
   	geom_density(alpha = 0.2) + 
   	theme_classic() +
   	scale_x_log10() + 
@@ -666,7 +666,7 @@ saveRDS(scrna.combined, paste0(outdir, "scrna.combined_postfilter.seurat.", proj
 DefaultAssay(scrna.combined) <- "RNA"
 all.genes <- rownames(scrna.combined)
 scrna.combined <- ScaleData(scrna.combined,features = all.genes,verbose = FALSE)
-#nk.markers <- FindConservedMarkers(scrna.combined, ident.1 = 0, grouping.var = "orig.ident", verbose = FALSE)
+#nk.markers <- FindConservedMarkers(scrna.combined, ident.1 = 0, grouping.var = "sample_id", verbose = FALSE)
 # FindAllMarkers
 scrna.markers <- FindAllMarkers(scrna.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25,verbose=FALSE,test.use = "MAST")
 names(scrna.markers)[names(scrna.markers) == "gene"] <- "geneSymbol"
