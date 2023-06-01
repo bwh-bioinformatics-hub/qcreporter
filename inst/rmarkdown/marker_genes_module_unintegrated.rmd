@@ -654,6 +654,8 @@ for (sample in samples){
     dev.off()
     meta[[sample]] <- scrna.list[[sample]]@meta.data
     Idents(scrna.list[[sample]]) <- meta[[sample]][resolution]
+    # save the list
+    saveRDS(scrna.list,paste0(out_dir,"scrna.list_postfilter.",projectName,".rds"))
     so_postfilter <-    Merge_Seurat_List(scrna.list,
                                               add.cell.ids = NULL,
                                               merge.data = TRUE,
