@@ -660,7 +660,7 @@ meta <- scrna.combined@meta.data
 Idents(scrna.combined) <- meta[resolution]
 rm(scrna.list)
 
-p1 <- DimPlot(scrna.combined, reduction = "umap", group.by = "orig.ident")
+p1 <- DimPlot(scrna.combined, reduction = "umap", group.by = "sample_id")
 p1
 pdf(file=paste0(outdir, "combined.umap.colorBySample.pdf"))
 print(p1 + coord_fixed())
@@ -670,12 +670,6 @@ p2 <- DimPlot(scrna.combined, reduction = "umap", label = TRUE, repel = TRUE)
 p2
 pdf(paste0(outdir, "combined.umap.colorByCluster.pdf"))
 print(p2 + coord_fixed())
-dev.off()
-
-p3 <- DimPlot(scrna.combined, reduction = "umap", split.by = "orig.ident", ncol = 4)
-p3
-pdf(paste0(outdir, "combined.umap.samples.pdf"), width = 12, height = 8)
-print(p3 + coord_fixed())
 dev.off()
 
 p4 <- DimPlot(scrna.combined, reduction = "umap", group.by = "treatment")
