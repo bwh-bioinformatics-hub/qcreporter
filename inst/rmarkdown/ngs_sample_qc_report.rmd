@@ -278,6 +278,8 @@ cat("## scRNA Sample", sep = "\n")
 ```  
 ```{r, child =  system.file("rmarkdown/qc_sample_summary_rna_seq_module.rmd", package = "qcreporter"), eval = has_rna}
 ```
+```{r, child =  system.file("rmarkdown/qc_sample_summary_rna_seq_module.rmd", package = "qcreporter"), eval = has_rna_unintegrated}
+```
 ```{r scrna_marker_gene_tab, results = "asis", eval = has_rna, echo = FALSE}
 cat("## scRNA Marker Genes", sep = "\n")
 
