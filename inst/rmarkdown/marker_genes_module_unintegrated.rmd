@@ -669,12 +669,12 @@ for (sample in samples){
 # Identify conserved cell type markers
 #nk.markers <- FindConservedMarkers(scrna.list[[sample]], ident.1 = 0, grouping.var = "orig.ident")
 scrna.list <- SplitObject(so_postfilter, split.by = "sample_id")
-for (sample in samples){
 scrna.markers = list()
 top10 = list()
 top25 = list()
 top50 = list()
 topN  = list()
+for (sample in samples){
 scrna.markers[[sample]] <- FindAllMarkers(scrna.list[[sample]], only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25,verbose=FALSE,test.use = "MAST")
 names(scrna.markers[[sample]])[names(scrna.markers[[sample]]) == "gene"] <- "geneSymbol"
 write.table(scrna.markers[[sample]], paste0(out_dir,sample, "_FindAllMarkers.clusters.xls"), sep = "\t", row.names = F)
