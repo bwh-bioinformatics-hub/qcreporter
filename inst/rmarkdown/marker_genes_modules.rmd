@@ -801,6 +801,18 @@ for (marker in markers){
     print(ggp[[marker]])
 }
 dev.off()
+  
+pdf(paste0(outdir, "combined.dotplot.geneSymbol.pdf"), width = 30, height = 10)
+p1 <- DotPlot_scCustom(scrna.combined, features = markers, x_lab_rotate = TRUE, colors_use = "blue") + scale_x_discrete(breaks=markers.ID, labels=geneTable$geneSymbol[match(markers.ID, geneTable$geneID)])
+print(p1)
+dev.off()
+      
+# developer, clustered
+pdf(paste0(outdir, "combined.dotplot.clustered.geneSymbol.pdf"), width = 10, height = 15)
+p1 <- Clustered_DotPlot_relabel(scrna.combined, features = markers, plot_km_elbow = F, new_row_labels = geneTable$geneSymbol[match(markers.ID, geneTable$geneID)])
+print(p1)
+dev.off()
+  
 ```
  ---  
 
