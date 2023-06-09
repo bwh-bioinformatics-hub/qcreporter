@@ -445,7 +445,7 @@ scrna.list[[sample]] = ScaleData(scrna.list[[sample]],verbose = F)
 scrna.list[[sample]] = RunPCA(scrna.list[[sample]], verbose = F, npcs = 20)
 scrna.list[[sample]] = RunUMAP(scrna.list[[sample]], dims = 1:10, verbose = F)
 nExp[[sample]] <- round(ncol(scrna.list[[sample]]) * multiplet_rate[[sample]])  # expected doublets
-scrna.list[[sample]] <- doubletFinder_v3(scrna.list[[sample]], pN = 0.25, pK = 0.09, nExp = nExp[[sample]], PCs = 1:10)
+scrna.list[[sample]] <- suppressMessages(doubletFinder_v3(scrna.list[[sample]], pN = 0.25, pK = 0.09, nExp = nExp[[sample]], PCs = 1:10))
 }
 
 
