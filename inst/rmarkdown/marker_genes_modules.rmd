@@ -499,7 +499,7 @@ theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
 facet_wrap(~sample_id) + 
-ggtitle("Prefilter")
+ggtitle("Prefilter Mitochondrial Percentage")
 
 postfilter_qc_mito <- metadata_postfilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.mito)) + 
 geom_point() + 
@@ -511,7 +511,7 @@ theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
 facet_wrap(~sample_id) + 
-ggtitle("Postfilter")
+ggtitle("Postfilter Mitochondrial Percentag")
 
 ggarrange(prefilter_qc_mito,postfilter_qc_mito,ncol=1,nrow=2,widths = 25,heights = 30)
 ```
@@ -529,7 +529,7 @@ theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
 facet_wrap(~sample_id) +
-ggtitle("Prefilter")
+ggtitle("Prefilter Ribosomal Percentage")
 
 postfilter_qc_ribo <- metadata_postfilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.ribo)) + 
 geom_point() + 
@@ -541,7 +541,7 @@ theme_classic() +
 geom_vline(xintercept = 500) +
 geom_hline(yintercept = 300) +
 facet_wrap(~sample_id) +
-ggtitle("Postfilter")
+ggtitle("Postfilter Ribosomal Percentage")
 
 ggarrange(prefilter_qc_ribo,postfilter_qc_ribo,ncol=1,nrow=2,widths = 10,heights = 8)
 ```
@@ -554,7 +554,7 @@ UMIs_transcripts_per_cell_prefilter <- metadata_prefilter %>%
   	theme_classic() +
   	ylab("Cell density") +
   	geom_vline(xintercept = 500) + 
-    ggtitle("Prefilter")
+    ggtitle("Prefilter UMIs Transcripts Per Cell")
 
 UMIs_transcripts_per_cell_postfilter <- metadata_postfilter %>% 
   	ggplot(aes(color=sample_id, x=nCount_RNA, fill= sample_id)) + 
@@ -563,7 +563,7 @@ UMIs_transcripts_per_cell_postfilter <- metadata_postfilter %>%
   	theme_classic() +
   	ylab("Cell density") +
   	geom_vline(xintercept = 500) + 
-    ggtitle("Postfilter")
+    ggtitle("Postfilter UMIs Transcripts Per Cell")
 
 ggarrange(UMIs_transcripts_per_cell_prefilter,UMIs_transcripts_per_cell_postfilter,ncol=1,nrow=2,widths = 10,heights = 8)
 ```
@@ -575,7 +575,7 @@ genes_per_cell_pre <- metadata_prefilter %>%
   	theme_classic() +
   	scale_x_log10() + 
   	geom_vline(xintercept = 300) + 
-    ggtitle("Prefilter")
+    ggtitle("Prefilter Genes Per Cell")
 
 genes_per_cell_post <- metadata_postfilter %>% 
   	ggplot(aes(color=sample_id, x=nCount_RNA, fill=sample_id )) + 
@@ -583,7 +583,7 @@ genes_per_cell_post <- metadata_postfilter %>%
   	theme_classic() +
   	scale_x_log10() + 
   	geom_vline(xintercept = 300) + 
-    ggtitle("Postfilter")
+    ggtitle("Postfilter Genes Per Cell")
 
 ggarrange(genes_per_cell_pre,genes_per_cell_post,ncol=1,nrow=2,widths = 10,heights = 8)
 ```
@@ -631,6 +631,7 @@ res_0.5 <- DimPlot(scrna.combined, group.by = "integrated_snn_res.0.5", label = 
 pdf(paste0(out_dir, "res_0.5.pdf"))
 print(res_0.5)
 dev.off()
+res_0.5
 res_0.7 <- DimPlot(scrna.combined, group.by = "integrated_snn_res.0.7", label = TRUE)
 pdf(paste0(out_dir, "res_0.7.pdf"))
 print(res_0.7)
@@ -639,6 +640,7 @@ res_1 <- DimPlot(scrna.combined, group.by = "integrated_snn_res.1", label = TRUE
 pdf(paste0(out_dir, "res_1.pdf"))
 print(res_1)
 dev.off()
+res_1
 res_1.2 <- DimPlot(scrna.combined, group.by = "integrated_snn_res.1.2", label = TRUE)
 pdf(paste0(out_dir, "res_1.2.pdf"))
 print(res_1.2)
@@ -651,28 +653,26 @@ res_2 <- DimPlot(scrna.combined, group.by = "integrated_snn_res.2", label = TRUE
 pdf(paste0(out_dir, "res_2.pdf"))
 print(res_2)
 dev.off()
+res_2
 meta <- scrna.combined@meta.data
 Idents(scrna.combined) <- meta[resolution]
 rm(scrna.list)
 
 p1 <- DimPlot(scrna.combined, reduction = "umap", group.by = "sample_id")
-p1
 pdf(file=paste0(outdir, "combined.umap.colorBySample.pdf"))
 print(p1 + coord_fixed())
 dev.off()
-
+print(p1 + coord_fixed())
 p2 <- DimPlot(scrna.combined, reduction = "umap", label = TRUE, repel = TRUE)
-p2
 pdf(paste0(outdir, "combined.umap.colorByCluster.pdf"))
 print(p2 + coord_fixed())
 dev.off()
-
+print(p2 + coord_fixed())
 p4 <- DimPlot(scrna.combined, reduction = "umap", group.by = "treatment")
-p4
 pdf(file=paste0(outdir, "combined.umap.colorByTreatment.pdf"))
 print(p4 + coord_fixed())
 dev.off() 
-             
+print(p4 + coord_fixed())
 saveRDS(scrna.combined, paste0(outdir, "scrna.combined_postfilter.seurat.", projectName, ".rds"))
 ```
 
