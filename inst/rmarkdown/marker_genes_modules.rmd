@@ -46,7 +46,7 @@ markers <- MarkerGenes$'marker_gene'
 geneTable <- read.csv(paste0(refdir, "geneAnnotationTable.csv"), header = T, row.names = 1)
 ``` 
   
-```{r }
+```{r echo=FALSE}
 # scCustermize code updated by developer, https://github.com/samuel-marsh/scCustomize/issues/27
 # Clustered_DotPlot_relabel function from developer
 
@@ -337,7 +337,7 @@ for(i in 1:length(samples)){
 
 [Return to Contents](#rna_seq_sample_top) 
 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 # Add percent.mt and percent.rb to cell level metadata
 for (sample in samples) {
   scrna.list[[sample]][["percent.mito"]] <- PercentageFeatureSet(scrna.list[[sample]], pattern = "^MT:|MT-|mt:|mt-") 
@@ -488,7 +488,7 @@ metadata_postfilter <- so_postfilter@meta.data
 ### QC Plots
 <a  id="Mitochondrial_Percentage"></a> 
 ### Mitochondrial Percentage
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 # mito
 prefilter_qc_mito <- metadata_prefilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.mito)) + 
 geom_point() + 
@@ -519,7 +519,7 @@ ggarrange(prefilter_qc_mito,postfilter_qc_mito,ncol=1,nrow=2,widths = 25,heights
 
 <a  id="Ribosomal_Percentage"></a> 
 ### Ribosomal Percentage 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 # ribo
 prefilter_qc_ribo <- metadata_prefilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.ribo)) + 
 geom_point() + 
@@ -549,7 +549,7 @@ ggarrange(prefilter_qc_ribo,postfilter_qc_ribo,ncol=1,nrow=2,widths = 10,heights
 ```
 <a  id="UMIs_transcripts_per_cell"></a> 
 ### UMIs/transcripts per cell
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 UMIs_transcripts_per_cell_prefilter <- metadata_prefilter %>% 
   	ggplot(aes(color=sample_id, x=nCount_RNA, fill= sample_id)) + 
   	geom_density(alpha = 0.2) + 
@@ -572,7 +572,7 @@ ggarrange(UMIs_transcripts_per_cell_prefilter,UMIs_transcripts_per_cell_postfilt
 ```
 <a  id="Genes Per Cell"></a> 
 ### genes per cell 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 genes_per_cell_pre <- metadata_prefilter %>% 
   	ggplot(aes(color=sample_id, x=nCount_RNA, fill=sample_id )) + 
   	geom_density(alpha = 0.2) + 
@@ -592,7 +592,7 @@ genes_per_cell_post <- metadata_postfilter %>%
 ggarrange(genes_per_cell_pre,genes_per_cell_post,ncol=1,nrow=2,widths = 10,heights = 8)
 ```
   
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 # Integration
 # normalize and identify variable features for each dataset independently
 scrna.list <- SplitObject(so_postfilter, split.by = "sample_id")
@@ -614,7 +614,7 @@ scrna.combined <- RunPCA(scrna.combined, npcs = 15, verbose = FALSE)
 ```
 <a  id="elbow_plot"></a> 
 ### Linear Dimensionality Reduction 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
     pdf(paste0(out_dir, "ElbowPlot.pdf"))
     p1 <- ElbowPlot(scrna.combined) + ggtitle("Integrated") + theme(aspect.ratio=5/10) + theme(plot.margin = unit(c(6, 6, 6, 6), "cm"))
     print(p1 + coord_fixed())
@@ -626,7 +626,7 @@ scrna.combined <- RunPCA(scrna.combined, npcs = 15, verbose = FALSE)
 ```
 <a  id="UMAP_Resolutions"></a> 
 ### UMAP - Resolutions
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 # Continue on analysis
 scrna.combined <- RunUMAP(scrna.combined, reduction = "pca", dims = 1:8,verbose=FALSE)
 scrna.combined <- FindNeighbors(scrna.combined, reduction = "pca", dims = 1:8,verbose=FALSE)
@@ -680,7 +680,7 @@ dev.off()
 saveRDS(scrna.combined, paste0(outdir, "scrna.combined_postfilter.seurat.", projectName, ".rds"))
 ```
 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 DefaultAssay(scrna.combined) <- "RNA"
 all.genes <- rownames(scrna.combined)
 scrna.combined <- ScaleData(scrna.combined,features = all.genes,verbose = FALSE)
@@ -708,7 +708,7 @@ topN <- Extract_Top_Markers(scrna.markers, num_genes = 25, named_vector = FALSE,
 ```
 
 <a  id="mgt"></a> 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 scrna.markers_sig <- scrna.markers[scrna.markers$p_val_adj <= 0.05,]            
 # Create Interactive Table
 if (species == "Mus musculus"){
@@ -773,7 +773,7 @@ DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
             
 ```
 <a  id="fp"></a> 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 # Feature plot
 pdf(paste0(out_dir, "combined.top25markers.pdf"))
 ggp = list()
@@ -790,7 +790,7 @@ dev.off()
 #  
 ```
 
-```{r message=FALSE}
+```{r echo=FALSE,message=FALSE}
 remove_markers <- setdiff(markers,row.names(scrna.combined))
 markers <- markers[!markers%in%remove_markers]
 markers <- unique(markers)
