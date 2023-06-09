@@ -19,7 +19,7 @@ stm("Starting scRNA Cluster Annotation Module")
   <summary>Expand Code</summary> 
 
 
-```{r rna_markergenes}
+```{r echo=FALSE,message=FALSE}
 stm("Reading in Marker Genes")
 
 if (length(grep("https",in_key)) > 0) {
