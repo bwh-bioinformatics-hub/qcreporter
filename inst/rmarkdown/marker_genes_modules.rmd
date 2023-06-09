@@ -306,9 +306,8 @@ Clustered_DotPlot_relabel <- function(
 }
 ```
   
-# Code to begin changing 
 
-```{r pre_processing}
+```{r pre_processing,echo=FALSE,message=FALSE}
 ### Pre-Processing
 stm('Preprocesing')
 # read H5 file directly into Seurat Object
