@@ -337,7 +337,7 @@ for(i in 1:length(samples)){
 
 [Return to Contents](#rna_seq_sample_top) 
 
-```{r QC message=FALSE}
+```{r message=FALSE}
 # Add percent.mt and percent.rb to cell level metadata
 for (sample in samples) {
   scrna.list[[sample]][["percent.mito"]] <- PercentageFeatureSet(scrna.list[[sample]], pattern = "^MT:|MT-|mt:|mt-") 
@@ -488,7 +488,7 @@ metadata_postfilter <- so_postfilter@meta.data
 ### QC Plots
 <a  id="Mitochondrial_Percentage"></a> 
 ### Mitochondrial Percentage
-```{r Mitochondrial Percentage Plot message=FALSE}
+```{r message=FALSE}
 # mito
 prefilter_qc_mito <- metadata_prefilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.mito)) + 
 geom_point() + 
@@ -519,7 +519,7 @@ ggarrange(prefilter_qc_mito,postfilter_qc_mito,ncol=1,nrow=2,widths = 25,heights
 
 <a  id="Ribosomal_Percentage"></a> 
 ### Ribosomal Percentage 
-```{r Ribo Percentage Plot message=FALSE}
+```{r message=FALSE}
 # ribo
 prefilter_qc_ribo <- metadata_prefilter %>% ggplot(aes(x=nCount_RNA, y=nFeature_RNA, color=percent.ribo)) + 
 geom_point() + 
@@ -549,7 +549,7 @@ ggarrange(prefilter_qc_ribo,postfilter_qc_ribo,ncol=1,nrow=2,widths = 10,heights
 ```
 <a  id="UMIs_transcripts_per_cell"></a> 
 ### UMIs/transcripts per cell
-```{r Visualize the number UMIs/transcripts per cell message=FALSE}
+```{r message=FALSE}
 UMIs_transcripts_per_cell_prefilter <- metadata_prefilter %>% 
   	ggplot(aes(color=sample_id, x=nCount_RNA, fill= sample_id)) + 
   	geom_density(alpha = 0.2) + 
@@ -572,7 +572,7 @@ ggarrange(UMIs_transcripts_per_cell_prefilter,UMIs_transcripts_per_cell_postfilt
 ```
 <a  id="Genes Per Cell"></a> 
 ### genes per cell 
-```{r Genes Per Cell message=FALSE}
+```{r message=FALSE}
 genes_per_cell_pre <- metadata_prefilter %>% 
   	ggplot(aes(color=sample_id, x=nCount_RNA, fill=sample_id )) + 
   	geom_density(alpha = 0.2) + 
@@ -614,7 +614,7 @@ scrna.combined <- RunPCA(scrna.combined, npcs = 15, verbose = FALSE)
 ```
 <a  id="elbow_plot"></a> 
 ### Linear Dimensionality Reduction 
-```{r rna_Elbow_Plot message=FALSE}
+```{r message=FALSE}
     pdf(paste0(out_dir, "ElbowPlot.pdf"))
     p1 <- ElbowPlot(scrna.combined) + ggtitle("Integrated") + theme(aspect.ratio=5/10) + theme(plot.margin = unit(c(6, 6, 6, 6), "cm"))
     print(p1 + coord_fixed())
@@ -626,7 +626,7 @@ scrna.combined <- RunPCA(scrna.combined, npcs = 15, verbose = FALSE)
 ```
 <a  id="UMAP_Resolutions"></a> 
 ### UMAP - Resolutions
-```{r rna_UMAP_Resolutions_Plot message=FALSE}
+```{r message=FALSE}
 # Continue on analysis
 scrna.combined <- RunUMAP(scrna.combined, reduction = "pca", dims = 1:8,verbose=FALSE)
 scrna.combined <- FindNeighbors(scrna.combined, reduction = "pca", dims = 1:8,verbose=FALSE)
@@ -708,7 +708,7 @@ topN <- Extract_Top_Markers(scrna.markers, num_genes = 25, named_vector = FALSE,
 ```
 
 <a  id="mgt"></a> 
-```{r Marker_Gene_Table message=FALSE}
+```{r message=FALSE}
 scrna.markers_sig <- scrna.markers[scrna.markers$p_val_adj <= 0.05,]            
 # Create Interactive Table
 if (species == "Mus musculus"){
@@ -773,7 +773,7 @@ DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
             
 ```
 <a  id="fp"></a> 
-```{r Feature_Plot message=FALSE}
+```{r message=FALSE}
 # Feature plot
 pdf(paste0(out_dir, "combined.top25markers.pdf"))
 ggp = list()
@@ -790,7 +790,7 @@ dev.off()
 #  
 ```
 
-```{r Customer Markers, Feature Plot, Dot Plot message=FALSE}
+```{r message=FALSE}
 remove_markers <- setdiff(markers,row.names(scrna.combined))
 markers <- markers[!markers%in%remove_markers]
 markers <- unique(markers)
