@@ -790,7 +790,7 @@ dev.off()
 remove_markers <- setdiff(markers,row.names(scrna.combined))
 markers <- markers[!markers%in%remove_markers]
 markers <- unique(markers)
-pdf(paste0(out_dir, "combined.markers.geneSymbol.pdf"))
+pdf(paste0(outdir, "combined.markers.geneSymbol.pdf"))
 ggp = list()
 for (marker in markers){
     ggp[[marker]]=FeaturePlot(scrna.combined, features=marker) + ggtitle(marker)
