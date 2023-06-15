@@ -351,7 +351,7 @@ scrna.combined_prefilter <- Merge_Seurat_List(scrna.list,
 # metadata variable
 metadata_prefilter <- scrna.combined_prefilter@meta.data
 # Save Prefilter
-saveRDS(scrna.combined_prefilter, paste0(outdir, "scrna.combined_prefilter.seurat.", projectName, ".rds"))
+saveRDS(scrna.combined_prefilter, paste0(out_dir, "scrna.combined_prefilter.seurat.", projectName, ".rds"))
                    
 # Filtered Cells with 3SD of mean nCount and nFeature, percent of mito
   
@@ -381,7 +381,7 @@ most_expressed[[sample]] <- order(apply(C[[sample]], 1, median), decreasing = T)
 most_expressed_plots = list()
 # most_expressed_plots[[sample]] <- 
 for (sample in samples){
-    pdf(paste0(outdir,sample,"_most_expressed_genes.pdf"))
+    pdf(paste0(out_dir,sample,"_most_expressed_genes.pdf"))
     boxplot(as.matrix(t(C[[sample]][most_expressed[[sample]], ])), cex = 0.1, las = 1, xlab = "% total count per cell",
     col = (scales::hue_pal())(20)[20:1], horizontal = TRUE)
     dev.off()
@@ -462,7 +462,7 @@ for (sample in samples){
 }
 
 for (sample in samples){
-    pdf(paste0(outdir,sample,"_DoubletFinder_UMAP_Plot.pdf"),width=15,height=15,onefile=TRUE)
+    pdf(paste0(out_dir,sample,"_DoubletFinder_UMAP_Plot.pdf"),width=15,height=15,onefile=TRUE)
     print(UMAP_plots[[sample]])
     dev.off()
 }
@@ -473,7 +473,7 @@ VlnPlots[[sample]] <- VlnPlot(scrna.list[[sample]], features = "nFeature_RNA", g
 }
 
 for (sample in samples){
-    pdf(paste0(outdir,sample,"_DoubletFinder_VlnPlot.pdf"),width=15,height=15,onefile=TRUE)
+    pdf(paste0(out_dir,sample,"_DoubletFinder_VlnPlot.pdf"),width=15,height=15,onefile=TRUE)
     print(VlnPlots[[sample]])
     dev.off()
 }
@@ -659,21 +659,21 @@ Idents(scrna.combined) <- meta[resolution]
 rm(scrna.list)
 
 p1 <- DimPlot(scrna.combined, reduction = "umap", group.by = "sample_id")
-pdf(file=paste0(outdir, "combined.umap.colorBySample.pdf"))
+pdf(file=paste0(out_dir, "combined.umap.colorBySample.pdf"))
 print(p1 + coord_fixed())
 dev.off()
 print(p1 + coord_fixed())
 p2 <- DimPlot(scrna.combined, reduction = "umap", label = TRUE, repel = TRUE)
-pdf(paste0(outdir, "combined.umap.colorByCluster.pdf"))
+pdf(paste0(out_dir, "combined.umap.colorByCluster.pdf"))
 print(p2 + coord_fixed())
 dev.off()
 print(p2 + coord_fixed())
 p4 <- DimPlot(scrna.combined, reduction = "umap", group.by = "treatment")
-pdf(file=paste0(outdir, "combined.umap.colorByTreatment.pdf"))
+pdf(file=paste0(out_dir, "combined.umap.colorByTreatment.pdf"))
 print(p4 + coord_fixed())
 dev.off() 
 print(p4 + coord_fixed())
-saveRDS(scrna.combined, paste0(outdir, "scrna.combined_postfilter.seurat.", projectName, ".rds"))
+saveRDS(scrna.combined, paste0(out_dir, "scrna.combined_postfilter.seurat.", projectName, ".rds"))
 ```
 
 ```{r echo=FALSE,message=FALSE}
@@ -782,7 +782,7 @@ dev.off()
 
 #DoHeatmap(scrna.combined, features = topN$geneID, size = 2, draw.lines = T, angle = 45, hjust = 0.2) + theme(axis.text.y = element_text(size = 5)) + NoLegend() + scale_y_discrete(breaks=topN$geneID,
 #        labels=geneTable$geneSymbol[match(topN$geneID, geneTable$geneID)])
-#ggsave(paste0(outdir, "top25markers.heatmap.integrated.geneSymbol.pdf"), width = 8, height = 12)
+#ggsave(paste0(out_dir, "top25markers.heatmap.integrated.geneSymbol.pdf"), width = 8, height = 12)
 #  
 ```
 
@@ -790,7 +790,7 @@ dev.off()
 remove_markers <- setdiff(markers,row.names(scrna.combined))
 markers <- markers[!markers%in%remove_markers]
 markers <- unique(markers)
-pdf(paste0(outdir, "combined.markers.geneSymbol.pdf"))
+pdf(paste0(out_dir, "combined.markers.geneSymbol.pdf"))
 ggp = list()
 for (marker in markers){
     ggp[[marker]]=FeaturePlot(scrna.combined, features=marker) + ggtitle(marker)
@@ -798,13 +798,13 @@ for (marker in markers){
 }
 dev.off()
   
-pdf(paste0(outdir, "combined.dotplot.geneSymbol.pdf"), width = 30, height = 10)
+pdf(paste0(out_dir, "combined.dotplot.geneSymbol.pdf"), width = 30, height = 10)
 p1 <- DotPlot_scCustom(scrna.combined, features = markers, x_lab_rotate = TRUE, colors_use = "blue") + scale_x_discrete(breaks= markers)
 print(p1)
 dev.off()
       
 # developer, clustered
-pdf(paste0(outdir, "combined.dotplot.clustered.geneSymbol.pdf"), width = 10, height = 15)
+pdf(paste0(out_dir, "combined.dotplot.clustered.geneSymbol.pdf"), width = 10, height = 15)
 p1 <- Clustered_DotPlot_relabel(scrna.combined, features = markers, plot_km_elbow = F, new_row_labels = markers)
 print(p1)
 dev.off()
