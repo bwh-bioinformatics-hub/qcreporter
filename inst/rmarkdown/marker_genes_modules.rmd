@@ -478,6 +478,13 @@ for (sample in samples){
     dev.off()
 }
 
+# Remove the Doublet Cells
+cells.use = list()
+for (sample in samples){
+     cells.use[[sample]] <- colnames(scrna.list[[sample]])[which(scrna.list[[sample]][[]][DF.name[[sample]]] == "Singlet")]
+     scrna.list[[sample]] <- subset(scrna.list[[sample]], cells = cells.use[[sample]])
+}
+
 so_postfilter <- Merge_Seurat_List(scrna.list,
                                               add.cell.ids = NULL,
                                               merge.data = TRUE,
