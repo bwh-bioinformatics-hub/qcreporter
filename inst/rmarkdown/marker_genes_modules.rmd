@@ -312,8 +312,8 @@ Clustered_DotPlot_relabel <- function(
 # Remove ambient RNA by SoupX
 data.10x = list()
 for (sample in samples){
-  filt.matrix <- Read10X_h5(paste0(in_dir, sample, "/outs/filtered_feature_bc_matrix.h5"), use.names = T)
-  raw.matrix <- Read10X_h5(paste0(in_dir, sample, "/outs/raw_feature_bc_matrix.h5"), use.names = T)
+  filt.matrix <- Read10X_h5(paste0(cellrangers_dir, sample, "/outs/filtered_feature_bc_matrix.h5"), use.names = T)
+  raw.matrix <- Read10X_h5(paste0(cellrangers_dir, sample, "/outs/raw_feature_bc_matrix.h5"), use.names = T)
   srat <- CreateSeuratObject(counts = filt.matrix)
   soup.channel <- SoupChannel(raw.matrix, filt.matrix)
   srat <- SCTransform(srat, verbose = F)
