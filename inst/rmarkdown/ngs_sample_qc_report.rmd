@@ -290,6 +290,14 @@ cat("## scRNA Marker Genes", sep = "\n")
 cat("## Marker Genes", sep = "\n")
 ```{r, child =  system.file("rmarkdown/marker_genes_module_unintegrated.rmd", package = "qcreporter"), eval = has_rna_unintegrated}
 ```
+```{r atac_tab, results = "asis", eval = has_atac, echo = FALSE}
+cat("## scATAC", sep = "\n")
+
+```  
+
+```{r atac_child, child =  system.file("rmarkdown/scatac_seq_module.Rmd", package = "qcreporter"), eval =  has_atac}
+
+```   
           
 
 ## Session Information   
