@@ -698,7 +698,140 @@ dev.off()
 print(p4 + coord_fixed())
 saveRDS(scrna.combined, paste0(out_dir, "scrna.combined_postfilter.seurat.", projectName, ".rds"))
 ```
+```{r echo=FALSE,message=FALSE}
+DefaultAssay(scrna.combined) <- "RNA"
+all.genes <- rownames(scrna.combined)
+scrna.combined <- ScaleData(scrna.combined,features = all.genes,verbose = FALSE)
+#nk.markers <- FindConservedMarkers(scrna.combined, ident.1 = 0, grouping.var = "sample_id", verbose = FALSE)
+# FindAllMarkers
+scrna.markers <- FindAllMarkers(scrna.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25,verbose=FALSE,test.use = "MAST")
+names(scrna.markers)[names(scrna.markers) == "gene"] <- "geneSymbol"
+scrna.markers$geneID <- geneTable$geneID[match(scrna.markers$geneSymbol, geneTable$geneSymbol)]
+write.table(scrna.markers, paste0(out_dir, "FindAllMarkers.clusters.xls"), sep = "\t", row.names = F)
+# top 10
+top10<- scrna.markers %>% group_by(cluster) %>% top_n(n = 10, wt = avg_log2FC)
+write.table(top10, paste0(out_dir, "FindAllMarkers.clusters.top10.xls"), sep = "\t", col.names = NA)
 
+# top 25
+top25 <- scrna.markers %>% group_by(cluster) %>% top_n(n = 25, wt = avg_log2FC)
+write.table(top25, paste0(out_dir, "FindAllMarkers.clusters.top25.xls"), sep = "\t", col.names = NA)
+
+# top 50
+top50 <- scrna.markers %>% group_by(cluster) %>% top_n(n = 50, wt = avg_log2FC)
+write.table(top50, paste0(out_dir, "FindAllMarkers.clusters.top50.xls"), sep = "\t", col.names = NA)
+
+# Step 6: Top 3 identified genes, feature plot, dotplot
+topN <- Extract_Top_Markers(scrna.markers, num_genes = 25, named_vector = FALSE, make_unique = TRUE, gene_column = "geneSymbol")
+        
+```
+
+<a  id="mgt"></a> 
+```{r echo=FALSE,message=FALSE}
+scrna.markers_sig <- scrna.markers[scrna.markers$p_val_adj <= 0.05,]            
+# Create Interactive Table
+if (species == "Mus musculus"){
+tibble::as_tibble(unique(scrna.markers_sig)) %>% dplyr::arrange(p_val_adj) -> scrna.markers_sig
+scrna.markers_sig = scrna.markers_sig %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
+                                             p_val_adj,pct.1,pct.2,geneID)
+final_df <- data.frame(           "cluster"    = scrna.markers_sig$cluster,
+                                  "gene"       = scrna.markers_sig$geneSymbol,
+                                  "p_val"      = scrna.markers_sig$p_val,
+                                  "avg_log2FC" = scrna.markers_sig$avg_log2FC,
+                                  "p_val_adj"  = scrna.markers_sig$p_val_adj,
+                                  "pct.1"      = scrna.markers_sig$pct.1,
+                                  "pct.2"      = scrna.markers_sig$pct.2,
+                                  "MGI_ID" = paste0("<a  href='https://www.informatics.jax.org/quicksearch/summary?queryType=exactPhrase&query=",scrna.markers_sig$geneID,"'>", scrna.markers_sig$geneID,"</a>"))
+
+DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
+              editable = TRUE, extensions = 'Buttons', options = list(
+                dom = 'Bfrtip',
+                buttons = c('copy','csv','excel','pdf','print')
+              ),escape = FALSE)
+}
+if (species == "Drosophila Melanogaster"){
+as_tibble(unique(scrna.markers_sig)) %>% arrange(p_val_adj) -> scrna.markers_sig
+scrna.markers_sig = scrna.markers_sig %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
+                                             p_val_adj,pct.1,pct.2,geneID)
+final_df <- data.frame(           "cluster"    = scrna.markers_sig$cluster,
+                                  "gene"       = scrna.markers_sig$geneSymbol,
+                                  "p_val"      = scrna.markers_sig$p_val,
+                                  "avg_log2FC" = scrna.markers_sig$avg_log2FC,
+                                  "p_val_adj"  = scrna.markers_sig$p_val_adj,
+                                  "pct.1"      = scrna.markers_sig$pct.1,
+                                  "pct.2"      = scrna.markers_sig$pct.2,
+                                  "FlyBase_ID" = paste0("<a  href='https://flybase.org/reports/",scrna.markers_sig$geneID,"'>", scrna.markers_sig$geneID,"</a>"))
+
+DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
+              editable = TRUE, extensions = 'Buttons', options = list(
+                dom = 'Bfrtip',
+                buttons = c('copy','csv','excel','pdf','print')
+              ),escape = FALSE)
+}
+            
+if (species == "Homo Sapiens"){
+# Create Interactive Table
+tibble::as_tibble(unique(scrna.markers_sig)) %>% dplyr::arrange(p_val_adj) -> scrna.markers_sig
+scrna.markers_sig = scrna.markers_sig %>% dplyr::select(cluster, geneSymbol, p_val, avg_log2FC,
+                                             p_val_adj,pct.1,pct.2,geneID)
+final_df <- data.frame(           "cluster"    = scrna.markers_sig$cluster,
+                                  "gene"       = scrna.markers_sig$geneSymbol,
+                                  "p_val"      = scrna.markers_sig$p_val,
+                                  "avg_log2FC" = scrna.markers_sig$avg_log2FC,
+                                  "p_val_adj"  = scrna.markers_sig$p_val_adj,
+                                  "pct.1"      = scrna.markers_sig$pct.1,
+                                  "pct.2"      = scrna.markers_sig$pct.2,
+                                  "GeneCards" = paste0("<a  href='https://www.genecards.org/Search/Keyword?queryString=",scrna.markers_sig$geneID,"'>", scrna.markers_sig$geneID,"</a>"))
+
+DT::datatable(final_df,class = 'cell-border stripe',rownames=F,filter='top',
+              editable = TRUE, extensions = 'Buttons', options = list(
+                dom = 'Bfrtip',
+                buttons = c('copy','csv','excel','pdf','print')
+              ),escape = FALSE)
+}
+            
+```
+<a  id="fp"></a> 
+```{r echo=FALSE,message=FALSE}
+# Feature plot
+pdf(paste0(out_dir, "combined.top25markers.pdf"))
+ggp = list()
+for (marker in topN){
+    ggp[[marker]]=FeaturePlot(scrna.combined, features=marker)
+    print(ggp[[marker]])
+}
+dev.off()
+
+
+#DoHeatmap(scrna.combined, features = topN$geneID, size = 2, draw.lines = T, angle = 45, hjust = 0.2) + theme(axis.text.y = element_text(size = 5)) + NoLegend() + scale_y_discrete(breaks=topN$geneID,
+#        labels=geneTable$geneSymbol[match(topN$geneID, geneTable$geneID)])
+#ggsave(paste0(out_dir, "top25markers.heatmap.integrated.geneSymbol.pdf"), width = 8, height = 12)
+#  
+```
+
+```{r echo=FALSE,message=FALSE}
+remove_markers <- setdiff(markers,row.names(scrna.combined))
+markers <- markers[!markers%in%remove_markers]
+markers <- unique(markers)
+pdf(paste0(out_dir, "combined.markers.geneSymbol.pdf"))
+ggp = list()
+for (marker in markers){
+    ggp[[marker]]=FeaturePlot(scrna.combined, features=marker) + ggtitle(marker)
+    print(ggp[[marker]])
+}
+dev.off()
+  
+pdf(paste0(out_dir, "combined.dotplot.geneSymbol.pdf"), width = 30, height = 10)
+p1 <- DotPlot_scCustom(scrna.combined, features = markers, x_lab_rotate = TRUE, colors_use = "blue") + scale_x_discrete(breaks= markers)
+print(p1)
+dev.off()
+      
+# developer, clustered
+pdf(paste0(out_dir, "combined.dotplot.clustered.geneSymbol.pdf"), width = 10, height = 15)
+p1 <- Clustered_DotPlot_relabel(scrna.combined, features = markers, plot_km_elbow = F, new_row_labels = markers)
+print(p1)
+dev.off()
+  
+```
 
  ---  
 
