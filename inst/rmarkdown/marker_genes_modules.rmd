@@ -704,7 +704,7 @@ all.genes <- rownames(scrna.combined)
 scrna.combined <- ScaleData(scrna.combined,features = all.genes,verbose = FALSE)
 #nk.markers <- FindConservedMarkers(scrna.combined, ident.1 = 0, grouping.var = "sample_id", verbose = FALSE)
 # FindAllMarkers
-scrna.markers <- FindAllMarkers(scrna.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25,verbose=FALSE,test.use = "MAST")
+scrna.markers <- FindAllMarkers(scrna.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25,verbose=FALSE)
 names(scrna.markers)[names(scrna.markers) == "gene"] <- "geneSymbol"
 scrna.markers$geneID <- geneTable$geneID[match(scrna.markers$geneSymbol, geneTable$geneSymbol)]
 write.table(scrna.markers, paste0(out_dir, "FindAllMarkers.clusters.xls"), sep = "\t", row.names = F)
